@@ -26,6 +26,8 @@ private:
     std::string getUserInputText() const;
 
     void print(Tree *pTree);
+
+    void playGame(Tree *pTree);
 };
 
 

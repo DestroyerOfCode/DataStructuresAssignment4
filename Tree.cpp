@@ -50,19 +50,37 @@ void Tree::setRight(Tree *right) {
 }
 
 Tree *Tree::moveRight() {
-    return nullptr;
+    if (nullptr == getRight()) {
+        return this;
+    }
+
+    return getRight();
 }
 
 Tree *Tree::moveLeft() {
-    return nullptr;
+    if (nullptr == getLeft()) {
+        return this;
+    }
+
+    return getLeft();
 }
 
 Tree *Tree::moveUp() {
-    return nullptr;
+    if (nullptr == getParent()) {
+        return this;
+    }
+
+    return getParent();
 }
 
-Tree *Tree::moveRoot() {
-    return nullptr;
+Tree *Tree::moveToRoot() {
+    Tree* temp = nullptr;
+    while(getParent() != nullptr) {
+        temp = getParent();
+        setParent(temp->getParent());
+    }
+
+    return temp;
 }
 
 Tree::~Tree() {

@@ -32,17 +32,22 @@ int Application::run() {
                     makeRight(binaryTree);
                     break;
                 case 'd':
+                    binaryTree = binaryTree->moveToRoot();
                     break;
                 case 'e':
+                    binaryTree = binaryTree->moveLeft();
                     break;
                 case 'f':
+                    binaryTree = binaryTree->moveRight();
                     break;
                 case 'g':
+                    binaryTree = binaryTree->moveUp();
                     break;
                 case 'h':
                     print(binaryTree);
                     break;
                 case 'i':
+                    playGame(binaryTree);
                     break;
                 case 'x':
                     return exit();
@@ -111,12 +116,17 @@ std::string Application::getUserInputText() const {
 
 void Application::print(Tree *pTree) {
 
-    std::cout << "Root: " << pTree->getQuestion();
-    std::cout << std::endl << "Left: ";
+    std::cout << "Parent: " << pTree->getQuestion() << std::endl << "Left: ";
     pTree->getLeft() == nullptr ? std::cout << "Empty" << std::endl
-                                : std::cout << pTree->getLeft()->getQuestion();
-    std::cout << std::endl << "Right: ";
+                                : std::cout << pTree->getLeft()->getQuestion() << std::endl;
+    std::cout << "Right: ";
     pTree->getRight() == nullptr ? std::cout << "Empty" << std::endl
                                  : std::cout << pTree->getRight()->getQuestion() << std::endl;
+
+}
+
+void Application::playGame(Tree *pTree) {
+
+
 
 }

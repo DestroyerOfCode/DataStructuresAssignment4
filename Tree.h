@@ -29,7 +29,7 @@ public:
 public:
     void setQuestion(const std::string &question);
 
-    Tree *moveRoot();
+    Tree *moveToRoot();
 
     Tree *moveUp();
 
