@@ -7,8 +7,10 @@
 #include <utility>
 #include "Application.h"
 #include "BinTree.h"
+#include "StringUtils.h"
 
 int Application::exit(BinTree* pTree) {
+    pTree = pTree->moveToRoot(pTree);
     delete pTree;
     return 0;
 }
@@ -16,7 +18,7 @@ int Application::exit(BinTree* pTree) {
 int Application::run() {
 
     std::string command;
-    BinTree *binaryTree = new BinTree();
+    BinTree *binaryTree = nullptr;
 
     printMenu();
     while (true) {
@@ -25,12 +27,22 @@ int Application::run() {
             getline(std::cin, command);
             switch (*command.c_str()) {
                 case 'a':
-                    binaryTree = new BinTree("A je to suchozemec?");
-                    binaryTree->createLeft("A je to psovita selma?");
-                    binaryTree = binaryTree->moveLeft();
-                    binaryTree->createLeft("A je to Rysova selma?");
-                    binaryTree = binaryTree->moveLeft();
-                    binaryTree->createLeft("A je rys?");
+                    binaryTree = new BinTree();
+//                    binaryTree = new BinTree("A je to suchozemec?");
+//                    binaryTree->createLeft("Je to psovita selma?");
+//                    binaryTree->createRight("Je to mackovita selma?");
+//                    binaryTree = binaryTree->moveRight();
+//                    binaryTree->createLeft("Je to Tiger?");
+//                    binaryTree = binaryTree->moveUp();
+//                    binaryTree = binaryTree->moveLeft();
+//                    binaryTree->createLeft("Byva v Amerike?");
+//                    binaryTree = binaryTree->moveLeft();
+//                    binaryTree->createLeft("Je to Kojot?");
+//                    binaryTree = binaryTree->moveUp();
+//                    binaryTree->createRight("Je aj na slovensku?");
+//                    binaryTree = binaryTree->moveRight();
+//                    binaryTree->createLeft("Je to doberman?");
+
 
                     break;
                 case 'b':
@@ -40,8 +52,7 @@ int Application::run() {
                     makeRight(binaryTree);
                     break;
                 case 'd':
-                    binaryTree = moveToRoot(binaryTree);
-//                    binaryTree = binaryTree->moveToRoot();
+                    binaryTree = binaryTree->moveToRoot(binaryTree);
                     break;
                 case 'e':
                     binaryTree = binaryTree->moveLeft();
@@ -148,7 +159,7 @@ void Application::print(BinTree *pTree) {
 
 void Application::playGame(BinTree *pTree) {
 
-    pTree = moveToRoot(pTree);
+    pTree = pTree->moveToRoot(pTree);
     std::string answer;
 
     while (true) {
@@ -183,7 +194,7 @@ void Application::playGame(BinTree *pTree) {
             std::cerr << e.what() << std::endl;
 
         }
-        pTree = moveToRoot(pTree);
+        pTree = pTree->moveToRoot(pTree);
     }
 
 }
@@ -192,33 +203,14 @@ BinTree *Application::lostGame(BinTree *pTree) {
     const std::string animalName = getUserInputText("Vyhral si! Na aké zviera myslíš?");
     const std::string question = getUserInputText(
             "Zadaj otazku tak,aby bola odpoved \"ano\" pre " + animalName + " a \"nie\" pre " +
-            lastStringWord(pTree->getQuestion()));
+                    StringUtils::lastStringWord(pTree->getQuestion()));
 
-    makeRight(pTree, "Je to " + lastStringWord(question) + "?");
+    makeRight(pTree, "Je to " + StringUtils::lastStringWord(question) + "?");
     pTree = pTree->moveRight();
     makeLeft(pTree, "Je to " + animalName + "?");
     return pTree;
 }
 
-std::string Application::lastStringWord(const std::string &text) {
-    int i = text.length() - 1;
-
-    if (isspace(text[i]))
-        while (isspace(text[i])) i--;
-
-    while (i != 0 && !isspace(text[i])) --i;
-
-    std::string lastword = text.substr(i + 1);
-    return lastword;
-}
-
 bool Application::isLastNode(const BinTree *pTree) const {
     return nullptr == pTree;
-}
-
-BinTree *Application::moveToRoot(BinTree *pTree) {
-    while (pTree->getParent() != nullptr) {
-        pTree = pTree->moveUp();
-    }
-    return pTree;
 }

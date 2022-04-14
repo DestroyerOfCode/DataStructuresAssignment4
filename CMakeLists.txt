@@ -3,4 +3,4 @@ project(datastructures_zadanie_4)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(datastructures_zadanie_4 main.cpp Application.cpp Application.h BinTree.cpp BinTree.h)
+add_executable(datastructures_zadanie_4 main.cpp Application.cpp Application.h BinTree.cpp BinTree.h StringUtils.cpp StringUtils.h)

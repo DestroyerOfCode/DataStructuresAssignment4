@@ -7,6 +7,8 @@
 
 
 #include <string>
+#include <fstream>
+#include <vector>
 
 class BinTree {
 
@@ -21,6 +23,9 @@ private:
     BinTree *parent;
     BinTree *right;
     std::string question;
+
+    void preOrderTraverse(BinTree *tree, std::ofstream &ofstream, int index);
+
 public:
     virtual ~BinTree();
 
@@ -28,8 +33,6 @@ public:
 
 public:
     void setQuestion(const std::string &question);
-
-    BinTree *moveToRoot();
 
     BinTree *moveUp();
 
@@ -58,7 +61,13 @@ public:
 
     BinTree(const std::string &question);
 
-    virtual ~BinTree();
+    void findNodeDirections(const std::string &index, std::vector<std::string> &nodeDirections) const;
+
+    void loadFromFile(BinTree *pTree) const;
+
+    void setRootNode(BinTree *pTree, const std::vector<std::string> &nodeDirections, const std::string &question) const;
+
+    BinTree *moveToRoot(BinTree *pTree);
 };
 
 

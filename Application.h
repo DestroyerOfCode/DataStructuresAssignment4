@@ -29,13 +29,11 @@ private:
 
     bool isLastNode(const BinTree *pTree) const;
 
-    std::string lastStringWord(const std::string &text);
-
     BinTree *makeRight(BinTree *pTree, std::string question);
 
     BinTree *makeLeft(BinTree *pTree, std::string question);
 
-    BinTree *moveToRoot(BinTree *pTree);
+//    BinTree *moveToRoot(BinTree *pTree);
 
     BinTree *lostGame(BinTree *pTree);
 

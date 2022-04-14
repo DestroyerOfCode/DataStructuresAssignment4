@@ -4,12 +4,71 @@
 
 #include <iostream>
 #include "BinTree.h"
+#include "StringUtils.h"
+#include <vector>
+
+#define OUTPUT_PATH "./out.txt"
 
 BinTree::BinTree() {
-    parent = nullptr;
-    left = nullptr;
-    right = nullptr;
-    question = "";
+    this->parent = nullptr;
+    this->left = nullptr;
+    this->right = nullptr;
+    this->question = "";
+
+    loadFromFile(this);
+}
+
+void BinTree::loadFromFile(BinTree *pTree) const {
+    std::ifstream inFile(OUTPUT_PATH, std::ifstream::in);
+    std::string row;
+    if (!inFile) {
+        throw std::runtime_error("Could not open file");
+    }
+    while (!(row = StringUtils::loadLine(row, inFile)).empty()) {
+        std::string index = StringUtils::lastStringWord(row);
+        std::vector<std::string> nodeDirections;
+
+        findNodeDirections(index, nodeDirections);
+        std::string question = row.substr(0, row.size() - 2);
+
+        setRootNode(pTree, nodeDirections, question);
+
+        for (int i = 0; i < nodeDirections.size(); ++i) {
+            if (i == nodeDirections.size() - 1) {
+                "r" == nodeDirections[i] ? pTree->createRight(question)
+                                         : pTree->createLeft(question);
+                break;
+            }
+            pTree = "r" == nodeDirections[i] ? pTree->moveRight()
+                                             : pTree->moveLeft();
+
+        }
+        pTree = pTree->moveToRoot(pTree);
+    }
+}
+
+BinTree *BinTree::moveToRoot(BinTree *pTree) {
+    while (pTree->getParent() != nullptr) {
+        pTree = pTree->moveUp();
+    }
+    return pTree;
+}
+
+void BinTree::setRootNode(BinTree *pTree, const std::vector<std::string> &nodeDirections,
+                          const std::string &question) const {
+    if (0 == nodeDirections.size()) {
+        pTree->setQuestion(question);
+    }
+}
+
+void BinTree::findNodeDirections(const std::string &index, std::vector<std::string> &nodeDirections) const {
+    for (int i = std::stoi(index); i > 1; i /= 2) {
+        if (i % 2 == 0) {
+            nodeDirections.insert(nodeDirections.begin(), "l");
+            continue;
+        }
+        nodeDirections.insert(nodeDirections.begin(), "r");
+    }
 }
 
 BinTree::BinTree(const std::string &question) : question(question) {
@@ -51,7 +110,25 @@ void BinTree::setRight(BinTree *right) {
 }
 
 BinTree::~BinTree() {
+    std::ofstream outFile(OUTPUT_PATH, std::ios::out);
+
+    if (!outFile) {
+        throw std::runtime_error("Could not open file");
+    }
+
+    preOrderTraverse(this, outFile, 1);
     std::cout << "bye\n";
+}
+
+void BinTree::preOrderTraverse(BinTree *tree, std::ofstream &ofstream, int index) {
+    if (nullptr == tree) {
+        return;
+    }
+
+    ofstream << tree->getQuestion() << " " << index << std::endl;
+
+    preOrderTraverse(tree->getLeft(), ofstream, index * 2);
+    preOrderTraverse(tree->getRight(), ofstream, index * 2 + 1);
 }
 
 BinTree *BinTree::moveRight() {
@@ -76,16 +153,6 @@ BinTree *BinTree::moveUp() {
     }
 
     return getParent();
-}
-
-BinTree *BinTree::moveToRoot() {
-    BinTree *temp = this;
-    while (getParent() != nullptr) {
-        temp = moveUp();
-        setParent(temp->getParent());
-    }
-
-    return temp;
 }
 
 BinTree *BinTree::getParent() const {
