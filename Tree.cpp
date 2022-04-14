@@ -4,14 +4,33 @@
 
 #include "Tree.h"
 
-Tree::Tree() {}
-
-Tree *Tree::getRoot() const {
-    return root;
+Tree::Tree() {
+    parent = nullptr;
+    left = nullptr;
+    right = nullptr;
+    question = "";
 }
 
-void Tree::setRoot(Tree *root) {
-    Tree::root = root;
+Tree::Tree(const std::string &question) : question(question) {
+    parent = nullptr;
+    left = nullptr;
+    right = nullptr;
+
+}
+
+Tree::Tree(Tree *tree) {
+    parent = tree->parent;
+    left = tree->left;
+    right = tree->right;
+    question = tree->question;
+}
+
+const std::string &Tree::getQuestion() const {
+    return question;
+}
+
+void Tree::setQuestion(const std::string &question) {
+    Tree::question = question;
 }
 
 Tree *Tree::getLeft() const {
@@ -30,30 +49,50 @@ void Tree::setRight(Tree *right) {
     Tree::right = right;
 }
 
-const std::string &Tree::getQuestion() const {
-    return question;
-}
-
-Tree *Tree::createRight(Tree *) {
+Tree *Tree::moveRight() {
     return nullptr;
 }
 
-Tree *Tree::createLeft(Tree *) {
+Tree *Tree::moveLeft() {
     return nullptr;
 }
 
-Tree *Tree::moveRight(Tree *) {
+Tree *Tree::moveUp() {
     return nullptr;
 }
 
-Tree *Tree::moveLeft(Tree *) {
+Tree *Tree::moveRoot() {
     return nullptr;
 }
 
-Tree *Tree::moveUp(Tree *) {
-    return nullptr;
+Tree::~Tree() {
+
 }
 
-Tree *Tree::moveRoot(Tree *) {
-    return nullptr;
+Tree *Tree::getParent() const {
+    return parent;
+}
+
+void Tree::setParent(Tree *parent) {
+    Tree::parent = parent;
+}
+
+Tree *Tree::createLeft(std::string text) {
+    Tree *newNode = new Tree(text);
+    newNode->setQuestion(text);
+
+    newNode->setParent(this);
+    setLeft(newNode);
+
+    return newNode->getLeft();
+}
+
+Tree *Tree::createRight(std::string text) {
+    Tree *newNode = new Tree(text);
+    newNode->setQuestion(text);
+
+    newNode->setParent(this);
+    setRight(newNode);
+
+    return newNode->getRight();
 }

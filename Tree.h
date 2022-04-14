@@ -10,28 +10,38 @@
 
 class Tree {
 
+public:
+    Tree *getParent() const;
+
+    void setParent(Tree *parent);
+
 private:
-    Tree *root;
+
     Tree *left;
+    Tree *parent;
     Tree *right;
-    const std::string question;
+    std::string question;
+public:
+    virtual ~Tree();
 
-    Tree *moveRoot(Tree *);
-
-    Tree *moveUp(Tree *);
-
-    Tree *moveLeft(Tree *);
-
-    Tree *moveRight(Tree *);
-
-    Tree *createLeft(Tree *);
-
-    Tree *createRight(Tree *);
+    explicit Tree(Tree *tree);
 
 public:
-    Tree *getRoot() const;
+    void setQuestion(const std::string &question);
 
-    void setRoot(Tree *root);
+    Tree *moveRoot();
+
+    Tree *moveUp();
+
+    Tree *moveLeft();
+
+    Tree *moveRight();
+
+    Tree *createLeft(std::string text);
+
+    Tree *createRight(std::string text);
+
+public:
 
     Tree *getLeft() const;
 
@@ -45,6 +55,8 @@ public:
 
 public:
     Tree();
+
+    Tree(const std::string &question);
 };
 
 

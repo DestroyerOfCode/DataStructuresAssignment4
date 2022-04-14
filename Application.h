@@ -6,6 +6,8 @@
 #define DATASTRUCTURES_ZADANIE_4_APPLICATION_H
 
 
+#include "Tree.h"
+
 class Application {
 public:
     int run();
@@ -14,6 +16,16 @@ private:
     void printMenu();
 
     int exit();
+
+    Tree *makeLeft(Tree *pTree);
+
+    void validation(Tree *pTree);
+
+    Tree *makeRight(Tree *pTree);
+
+    std::string getUserInputText() const;
+
+    void print(Tree *pTree);
 };
 
 
