@@ -23,11 +23,23 @@ private:
 
     Tree *makeRight(Tree *pTree);
 
-    std::string getUserInputText() const;
-
     void print(Tree *pTree);
 
     void playGame(Tree *pTree);
+
+    std::string getUserInputText(std::string consolePrintText) const;
+
+    bool isLastNode(const Tree *pTree) const;
+
+    std::string lastStringWord(const std::string &text);
+
+    Tree *makeRight(Tree *pTree, std::string question);
+
+    Tree *makeLeft(Tree *pTree, std::string question);
+
+    Tree *moveToRoot(Tree *pTree);
+
+    Tree *lostGame(Tree *pTree);
 };
 
 

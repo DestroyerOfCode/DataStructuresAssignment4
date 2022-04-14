@@ -4,6 +4,7 @@
 
 #include <string>
 #include <iostream>
+#include <utility>
 #include "Application.h"
 #include "Tree.h"
 
@@ -13,17 +14,23 @@ int Application::exit() {
 
 int Application::run() {
 
-    char command;
+    std::string command;
     Tree *binaryTree = new Tree();
 
     printMenu();
     while (true) {
 
         try {
-            scanf("%c", &command);
-            switch (command) {
+            getline(std::cin, command);
+            switch (*command.c_str()) {
                 case 'a':
-                    binaryTree = new Tree("A je to vobec zviera?");
+                    binaryTree = new Tree("A je to suchozemec?");
+                    binaryTree->createLeft("A je to psovita selma?");
+                    binaryTree = binaryTree->moveLeft();
+                    binaryTree->createLeft("A je to Rysova selma?");
+                    binaryTree = binaryTree->moveLeft();
+                    binaryTree->createLeft("A je rys?");
+
                     break;
                 case 'b':
                     makeLeft(binaryTree);
@@ -32,7 +39,8 @@ int Application::run() {
                     makeRight(binaryTree);
                     break;
                 case 'd':
-                    binaryTree = binaryTree->moveToRoot();
+                    binaryTree = moveToRoot(binaryTree);
+//                    binaryTree = binaryTree->moveToRoot();
                     break;
                 case 'e':
                     binaryTree = binaryTree->moveLeft();
@@ -84,39 +92,51 @@ void Application::validation(Tree *pTree) {
 }
 
 Tree *Application::makeLeft(Tree *pTree) {
-    std::string question = getUserInputText();
+    std::string question = getUserInputText("What is the question you want to ask??");
 
     validation(pTree);
 
-    pTree = pTree->createLeft(question);
+    return pTree->createLeft(question);
 
-    return pTree;
+}
+
+Tree *Application::makeLeft(Tree *pTree, std::string question) {
+    validation(pTree);
+
+    return pTree->createLeft(std::move(question));
+
+}
+
+Tree *Application::makeRight(Tree *pTree, std::string question) {
+
+    validation(pTree);
+
+    return pTree->createRight(std::move(question));
+
 }
 
 Tree *Application::makeRight(Tree *pTree) {
-    std::string question = getUserInputText();
+    std::string question = getUserInputText("What is the question you want to ask??");
 
     validation(pTree);
 
-    pTree = pTree->createRight(question);
+    return pTree->createRight(question);
 
-    return pTree;
 }
 
-std::string Application::getUserInputText() const {
+std::string Application::getUserInputText(std::string consolePrintText) const {
 
+    std::cout << consolePrintText << std::endl;
     std::string text;
-    std::cout << "What is the question you want to ask??" << std::endl;
-    std::cout.flush();
 
-    std::cin >> text;
+    std::getline(std::cin, text, '\n');
 
     return text;
 }
 
 void Application::print(Tree *pTree) {
 
-    std::cout << "Parent: " << pTree->getQuestion() << std::endl << "Left: ";
+    std::cout << "Question: " << pTree->getQuestion() << std::endl << "Left: ";
     pTree->getLeft() == nullptr ? std::cout << "Empty" << std::endl
                                 : std::cout << pTree->getLeft()->getQuestion() << std::endl;
     std::cout << "Right: ";
@@ -127,6 +147,77 @@ void Application::print(Tree *pTree) {
 
 void Application::playGame(Tree *pTree) {
 
+    pTree = moveToRoot(pTree);
+    std::string answer;
 
+    while (true) {
+        try {
+            answer = getUserInputText(pTree->getQuestion());
+            if ("y" == answer) {
+                if (!isLastNode(pTree->getLeft())) {
+                    pTree = pTree->moveLeft();
+                    continue;
+                }
+                    std::cout << "Uhádol som!" << std::endl;
+                    answer = getUserInputText("Chcete hrať znova (y/n)?");
+                    if ("n" == answer) {
+                        break;
+                    }
+            } else if ("n" == answer) {
+                if (!isLastNode(pTree->getRight())) {
+                    pTree = pTree->moveRight();
+                    continue;
+                }
+                pTree = lostGame(pTree);
 
+                answer = getUserInputText("Chcete hrať znova (y/n)?");
+                    if ("n" == answer) {
+                        break;
+                    }
+
+            } else {
+                throw std::runtime_error("Wrong input, Write \"y\" or \"n\n");
+            }
+        } catch (std::runtime_error &e) {
+            std::cerr << e.what() << std::endl;
+
+        }
+        pTree = moveToRoot(pTree);
+    }
+
+}
+
+Tree *Application::lostGame(Tree *pTree) {
+    const std::string animalName = getUserInputText("Vyhral si! Na aké zviera myslíš?");
+    const std::string question = getUserInputText(
+            "Zadaj otazku tak,aby bola odpoved \"ano\" pre " + animalName + " a \"nie\" pre " +
+            lastStringWord(pTree->getQuestion()));
+
+    makeRight(pTree, "Je to " + lastStringWord(question) + "?");
+    pTree = pTree->moveRight();
+    makeLeft(pTree, "Je to " + animalName + "?");
+    return pTree;
+}
+
+std::string Application::lastStringWord(const std::string &text) {
+    int i = text.length() - 1;
+
+    if (isspace(text[i]))
+        while (isspace(text[i])) i--;
+
+    while (i != 0 && !isspace(text[i])) --i;
+
+    std::string lastword = text.substr(i + 1);
+    return lastword;
+}
+
+bool Application::isLastNode(const Tree *pTree) const {
+    return nullptr == pTree;
+}
+
+Tree *Application::moveToRoot(Tree *pTree) {
+    while (pTree->getParent() != nullptr) {
+        pTree = pTree->moveUp();
+    }
+    return pTree;
 }

@@ -74,9 +74,9 @@ Tree *Tree::moveUp() {
 }
 
 Tree *Tree::moveToRoot() {
-    Tree* temp = nullptr;
+    Tree* temp = this;
     while(getParent() != nullptr) {
-        temp = getParent();
+        temp = moveUp();
         setParent(temp->getParent());
     }
 
