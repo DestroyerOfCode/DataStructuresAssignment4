@@ -6,7 +6,7 @@
 #define DATASTRUCTURES_ZADANIE_4_APPLICATION_H
 
 
-#include "Tree.h"
+#include "BinTree.h"
 
 class Application {
 public:
@@ -15,31 +15,31 @@ public:
 private:
     void printMenu();
 
-    int exit();
+    BinTree *makeLeft(BinTree *pTree);
 
-    Tree *makeLeft(Tree *pTree);
+    void validation(BinTree *pTree);
 
-    void validation(Tree *pTree);
+    BinTree *makeRight(BinTree *pTree);
 
-    Tree *makeRight(Tree *pTree);
+    void print(BinTree *pTree);
 
-    void print(Tree *pTree);
-
-    void playGame(Tree *pTree);
+    void playGame(BinTree *pTree);
 
     std::string getUserInputText(std::string consolePrintText) const;
 
-    bool isLastNode(const Tree *pTree) const;
+    bool isLastNode(const BinTree *pTree) const;
 
     std::string lastStringWord(const std::string &text);
 
-    Tree *makeRight(Tree *pTree, std::string question);
+    BinTree *makeRight(BinTree *pTree, std::string question);
 
-    Tree *makeLeft(Tree *pTree, std::string question);
+    BinTree *makeLeft(BinTree *pTree, std::string question);
 
-    Tree *moveToRoot(Tree *pTree);
+    BinTree *moveToRoot(BinTree *pTree);
 
-    Tree *lostGame(Tree *pTree);
+    BinTree *lostGame(BinTree *pTree);
+
+    int exit(BinTree *pTree);
 };
 
 
