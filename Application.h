@@ -25,7 +25,7 @@ private:
 
     void playGame(BinTree *pTree);
 
-    std::string getUserInputText(const std::string& consolePrintText) const;
+    std::string getUserInputText(const std::string &consolePrintText) const;
 
     bool isLastNode(const BinTree *pTree) const;
 
