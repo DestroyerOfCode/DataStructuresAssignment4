@@ -68,6 +68,10 @@ public:
     void setRootNode(BinTree *pTree, const std::vector<std::string> &nodeDirections, const std::string &question) const;
 
     BinTree *moveToRoot(BinTree *pTree);
+
+    BinTree *
+    moveToPlaceAndCreateNode(BinTree *pTree, const std::vector<std::string> &nodeDirections,
+                             std::string &currentQuestion) const;
 };
 
 

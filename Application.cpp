@@ -9,7 +9,7 @@
 #include "BinTree.h"
 #include "StringUtils.h"
 
-int Application::exit(BinTree* pTree) {
+int Application::exit(BinTree *pTree) {
     pTree = pTree->moveToRoot(pTree);
     delete pTree;
     return 0;
@@ -18,7 +18,8 @@ int Application::exit(BinTree* pTree) {
 int Application::run() {
 
     std::string command;
-    BinTree *binaryTree = nullptr;
+    std::string question;
+    auto *binaryTree = new BinTree();
 
     printMenu();
     while (true) {
@@ -27,23 +28,8 @@ int Application::run() {
             getline(std::cin, command);
             switch (*command.c_str()) {
                 case 'a':
-                    binaryTree = new BinTree();
-//                    binaryTree = new BinTree("A je to suchozemec?");
-//                    binaryTree->createLeft("Je to psovita selma?");
-//                    binaryTree->createRight("Je to mackovita selma?");
-//                    binaryTree = binaryTree->moveRight();
-//                    binaryTree->createLeft("Je to Tiger?");
-//                    binaryTree = binaryTree->moveUp();
-//                    binaryTree = binaryTree->moveLeft();
-//                    binaryTree->createLeft("Byva v Amerike?");
-//                    binaryTree = binaryTree->moveLeft();
-//                    binaryTree->createLeft("Je to Kojot?");
-//                    binaryTree = binaryTree->moveUp();
-//                    binaryTree->createRight("Je aj na slovensku?");
-//                    binaryTree = binaryTree->moveRight();
-//                    binaryTree->createLeft("Je to doberman?");
-
-
+                    question = getUserInputText("What is the question you want to ask??");
+                    binaryTree = new BinTree(question + "?");
                     break;
                 case 'b':
                     makeLeft(binaryTree);
@@ -136,7 +122,7 @@ BinTree *Application::makeRight(BinTree *pTree) {
 
 }
 
-std::string Application::getUserInputText(std::string consolePrintText) const {
+std::string Application::getUserInputText(const std::string &consolePrintText) const {
 
     std::cout << consolePrintText << std::endl;
     std::string text;
@@ -147,6 +133,8 @@ std::string Application::getUserInputText(std::string consolePrintText) const {
 }
 
 void Application::print(BinTree *pTree) {
+
+    validation(pTree);
 
     std::cout << "Question: " << pTree->getQuestion() << std::endl << "Left: ";
     pTree->getLeft() == nullptr ? std::cout << "Empty" << std::endl
@@ -159,6 +147,7 @@ void Application::print(BinTree *pTree) {
 
 void Application::playGame(BinTree *pTree) {
 
+    validation(pTree);
     pTree = pTree->moveToRoot(pTree);
     std::string answer;
 
@@ -170,11 +159,11 @@ void Application::playGame(BinTree *pTree) {
                     pTree = pTree->moveLeft();
                     continue;
                 }
-                    std::cout << "Uhádol som!" << std::endl;
-                    answer = getUserInputText("Chcete hrať znova (y/n)?");
-                    if ("n" == answer) {
-                        break;
-                    }
+                std::cout << "Uhádol som!" << std::endl;
+                answer = getUserInputText("Chcete hrať znova (y/n)?");
+                if ("n" == answer) {
+                    break;
+                }
             } else if ("n" == answer) {
                 if (!isLastNode(pTree->getRight())) {
                     pTree = pTree->moveRight();
@@ -183,9 +172,9 @@ void Application::playGame(BinTree *pTree) {
                 pTree = lostGame(pTree);
 
                 answer = getUserInputText("Chcete hrať znova (y/n)?");
-                    if ("n" == answer) {
-                        break;
-                    }
+                if ("n" == answer) {
+                    break;
+                }
 
             } else {
                 throw std::runtime_error("Wrong input, Write \"y\" or \"n\n");
@@ -203,12 +192,28 @@ BinTree *Application::lostGame(BinTree *pTree) {
     const std::string animalName = getUserInputText("Vyhral si! Na aké zviera myslíš?");
     const std::string question = getUserInputText(
             "Zadaj otazku tak,aby bola odpoved \"ano\" pre " + animalName + " a \"nie\" pre " +
-                    StringUtils::lastStringWord(pTree->getQuestion()));
+            StringUtils::lastStringWord(pTree->getQuestion()));
 
-    makeRight(pTree, "Je to " + StringUtils::lastStringWord(question) + "?");
+    if (nullptr != pTree->getLeft()) {
+        pTree = createNodeInRightCorner(pTree, animalName, question);
+    } else {
+        createNodeInLeftCorner(pTree, animalName, question);
+    }
+    return pTree;
+}
+
+BinTree *
+Application::createNodeInRightCorner(BinTree *pTree, const std::string &animalName, const std::string &question) {
+    makeRight(pTree, question + "?");
     pTree = pTree->moveRight();
     makeLeft(pTree, "Je to " + animalName + "?");
     return pTree;
+}
+
+void Application::createNodeInLeftCorner(BinTree *pTree, const std::string &animalName, const std::string &question) {
+    makeLeft(pTree, pTree->getQuestion());
+    makeRight(pTree, "Je to " + animalName + "?");
+    pTree->setQuestion(question + "?");
 }
 
 bool Application::isLastNode(const BinTree *pTree) const {

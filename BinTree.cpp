@@ -7,7 +7,7 @@
 #include "StringUtils.h"
 #include <vector>
 
-#define OUTPUT_PATH "./out.txt"
+#define ANIMALS_FILE_PATH "./animals.txt"
 
 BinTree::BinTree() {
     this->parent = nullptr;
@@ -19,7 +19,7 @@ BinTree::BinTree() {
 }
 
 void BinTree::loadFromFile(BinTree *pTree) const {
-    std::ifstream inFile(OUTPUT_PATH, std::ifstream::in);
+    std::ifstream inFile(ANIMALS_FILE_PATH, std::ifstream::in);
     std::string row;
     if (!inFile) {
         throw std::runtime_error("Could not open file");
@@ -29,22 +29,28 @@ void BinTree::loadFromFile(BinTree *pTree) const {
         std::vector<std::string> nodeDirections;
 
         findNodeDirections(index, nodeDirections);
-        std::string question = row.substr(0, row.size() - 2);
+        std::string currentQuestion = row.substr(0, 1 + row.rfind('?'));
 
-        setRootNode(pTree, nodeDirections, question);
+        setRootNode(pTree, nodeDirections, currentQuestion);
 
-        for (int i = 0; i < nodeDirections.size(); ++i) {
-            if (i == nodeDirections.size() - 1) {
-                "r" == nodeDirections[i] ? pTree->createRight(question)
-                                         : pTree->createLeft(question);
-                break;
-            }
-            pTree = "r" == nodeDirections[i] ? pTree->moveRight()
-                                             : pTree->moveLeft();
-
-        }
+        pTree = moveToPlaceAndCreateNode(pTree, nodeDirections, currentQuestion);
         pTree = pTree->moveToRoot(pTree);
     }
+}
+
+BinTree *BinTree::moveToPlaceAndCreateNode(BinTree *pTree, const std::vector<std::string> &nodeDirections,
+                                           std::string &currentQuestion) const {
+    for (int i = 0; i < nodeDirections.size(); ++i) {
+        if (i == nodeDirections.size() - 1) {
+            "r" == nodeDirections[i] ? pTree->createRight(currentQuestion)
+                                     : pTree->createLeft(currentQuestion);
+            break;
+        }
+        pTree = "r" == nodeDirections[i] ? pTree->moveRight()
+                                         : pTree->moveLeft();
+
+    }
+    return pTree;
 }
 
 BinTree *BinTree::moveToRoot(BinTree *pTree) {
@@ -110,7 +116,7 @@ void BinTree::setRight(BinTree *right) {
 }
 
 BinTree::~BinTree() {
-    std::ofstream outFile(OUTPUT_PATH, std::ios::out);
+    std::ofstream outFile(ANIMALS_FILE_PATH, std::ios::out);
 
     if (!outFile) {
         throw std::runtime_error("Could not open file");

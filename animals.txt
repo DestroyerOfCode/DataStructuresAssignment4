@@ -1,4 +1,12 @@
-A je to suchozemec?
-A je to psovita selma?
-A je to Rysova selma?
-A je rys?
+A je to suchozemec? 1
+Je to psovita selma? 2
+Byva v Amerike? 4
+Je nebezpecna? 8
+Je to Kojot? 16
+Je to hyena? 17
+Je aj na slovensku? 5
+Je to macka? 10
+nosi dieta vo vacku? 11
+Je to kengura? 22
+Je to mackovita selma? 3
+Je to Tiger? 6

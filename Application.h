@@ -25,7 +25,7 @@ private:
 
     void playGame(BinTree *pTree);
 
-    std::string getUserInputText(std::string consolePrintText) const;
+    std::string getUserInputText(const std::string& consolePrintText) const;
 
     bool isLastNode(const BinTree *pTree) const;
 
@@ -33,11 +33,13 @@ private:
 
     BinTree *makeLeft(BinTree *pTree, std::string question);
 
-//    BinTree *moveToRoot(BinTree *pTree);
-
     BinTree *lostGame(BinTree *pTree);
 
     int exit(BinTree *pTree);
+
+    void createNodeInLeftCorner(BinTree *pTree, const std::string &animalName, const std::string &question);
+
+    BinTree *createNodeInRightCorner(BinTree *pTree, const std::string &animalName, const std::string &question);
 };
 
 
